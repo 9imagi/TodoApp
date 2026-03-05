@@ -1,7 +1,9 @@
 "use client";
 
+import { Toaster } from "@/components/ui/sonner";
 import { date } from "better-auth";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 export default function TodoApp() {
   const [todos, setTodos] = useState<string[]>([]);
@@ -16,13 +18,15 @@ export default function TodoApp() {
     if (!text.trim()) return;
     setTodos((prev) => [...prev, text.trim()]);
     setText("");
-    alert("Task successfully added");
+    return toast.success("Task added successfully.", {
+      style: { background: "blue" },
+    });
   };
   const remove = (index: number) => {
     setTodos((prev) => prev.filter((_, i) => i !== index));
   };
   return (
-    <div className=" flex justify-center items-center h-full flex-col pt-20">
+    <div className=" flex justify-center items-center h-screen flex-col pt-20">
       <form onSubmit={add} className="mb-7">
         <div className="flex gap-6">
           {" "}
@@ -42,8 +46,9 @@ export default function TodoApp() {
         className="hover:bg-fuchsia-400 rounded-sm px-3 shadow-lg "
         onClick={handleVisisble}
       >
-        View TodoLists
+        <p>{visible ? "Close TodoLists" : "View TodoLists"}</p>
       </button>
+      <Toaster position="top-center" />
 
       {visible && (
         <ul className="mt-20 p-5 w-1/2 h-auto text-lg font-semibold shadow-gray-600 shadow-md">
@@ -52,7 +57,7 @@ export default function TodoApp() {
           </h2>
 
           {todos.length === 0 ? (
-            <p className="text-red-500 btext-sm">Task is empty</p>
+            <p className="text-red-500 text-sm">Task is empty</p>
           ) : (
             <div>
               {todos.map((todo, i) => (
@@ -61,7 +66,6 @@ export default function TodoApp() {
                   className="flex justify-between mb-5  items-center "
                 >
                   {todo}
-
                   <button
                     className="bg-red-500 px-3 rounded-sm h-10 text-white "
                     onClick={() => remove(i)}
